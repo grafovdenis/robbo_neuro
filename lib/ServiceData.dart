@@ -11,13 +11,7 @@ class ServiceData extends StatefulWidget {
     if (characteristics.isNotEmpty)
       this.characteristics = characteristics;
     else {
-      read();
-    }
-  }
-
-  Future<void> read() async {
-    for (int i = 0; i < 9; i++) {
-      await characteristics[i].read().catchError((err) {});
+      this.characteristics = List<BluetoothCharacteristic>(9);
     }
   }
 
@@ -58,28 +52,28 @@ class ServiceDataState extends State<ServiceData> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child:
-          (widget.characteristics != null && widget.characteristics.isNotEmpty)
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                      Text("Pitch: ${widget.characteristics[0].lastValue}"),
-//            Text("${characteristics[1].lastValue[0].toSigned(8)}"),
-                      Text("Yaw: ${widget.characteristics[1].lastValue}"),
-                      Text("Roll: ${widget.characteristics[2].lastValue}"),
-                      Container(
-                        height: 200,
-                        child: (widget.characteristics[4].lastValue.isNotEmpty)
-                            ? StackedBarChart([
-                                widget.characteristics[3].lastValue[0],
-                                widget.characteristics[4].lastValue[0],
-                                widget.characteristics[5].lastValue[0],
-                                widget.characteristics[8].lastValue[0]
-                              ], false)
-                            : Container(),
-                      )
-                    ])
-              : Center(child: Text("No data")),
+      child: (widget.characteristics != null &&
+              widget.characteristics.isNotEmpty &&
+              widget.characteristics[0] != null)
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                  Text("Pitch: ${widget.characteristics[0].lastValue}"),
+                  Text("Yaw  : ${widget.characteristics[1].lastValue}"),
+                  Text("Roll : ${widget.characteristics[2].lastValue}"),
+                  Container(
+                    height: 200,
+                    child: (widget.characteristics[4].lastValue.isNotEmpty)
+                        ? StackedBarChart([
+                            widget.characteristics[3].lastValue[0],
+                            widget.characteristics[4].lastValue[0],
+                            widget.characteristics[5].lastValue[0],
+                            widget.characteristics[8].lastValue[0]
+                          ], true)
+                        : Container(),
+                  )
+                ])
+          : Center(child: Text("No data")),
     );
   }
 }
