@@ -11,7 +11,7 @@ class ServiceData extends StatefulWidget {
     if (characteristics.isNotEmpty)
       this.characteristics = characteristics;
     else {
-      this.characteristics = List<BluetoothCharacteristic>(9);
+      this.characteristics = List<BluetoothCharacteristic>(10);
     }
   }
 
@@ -26,7 +26,7 @@ class ServiceDataState extends State<ServiceData> {
 
   Future<void> read() async {
     try {
-      for (int i = 0; i < 9; i++) {
+      for (int i = 0; i < 10; i++) {
         await widget.characteristics[i].read();
       }
       setState(() {});
@@ -68,7 +68,8 @@ class ServiceDataState extends State<ServiceData> {
                             widget.characteristics[3].lastValue[0],
                             widget.characteristics[4].lastValue[0],
                             widget.characteristics[5].lastValue[0],
-                            widget.characteristics[8].lastValue[0]
+                            widget.characteristics[8].lastValue[0],
+                            widget.characteristics[9].lastValue[0]
                           ], true)
                         : Container(),
                   )
@@ -92,7 +93,8 @@ class StackedBarChart extends StatelessWidget {
       new ChartColumn('Alpha', values[0]),
       new ChartColumn('Beta', values[1]),
       new ChartColumn('Theta', values[2]),
-      new ChartColumn('Signal quality', values[3])
+      new ChartColumn('Signal quality', values[3]),
+      new ChartColumn('Charge', values[4])
     ];
 
     final maxData = [
@@ -100,6 +102,7 @@ class StackedBarChart extends StatelessWidget {
       new ChartColumn('Beta', 255),
       new ChartColumn('Theta', 255),
       new ChartColumn('Signal quality', 255),
+      new ChartColumn('Charge', 255)
     ];
 
     return [
