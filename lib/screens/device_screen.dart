@@ -91,7 +91,7 @@ class DeviceScreen extends StatelessWidget {
                   ),
                 ),
           ),
-          (device.name == "ROBBO neuro")
+          (device.name == "ROBBO neuro" || device.name == "ROBBO_neuro")
               ? StreamBuilder<List<BluetoothService>>(
                   stream: device.services,
                   initialData: [],

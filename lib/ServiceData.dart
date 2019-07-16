@@ -102,7 +102,7 @@ class StackedBarChart extends StatelessWidget {
       new ChartColumn('Beta', 255),
       new ChartColumn('Theta', 255),
       new ChartColumn('Signal quality', 255),
-      new ChartColumn('Charge', 255)
+      new ChartColumn('Charge', 100)
     ];
 
     return [
