@@ -50,6 +50,26 @@ class ServiceDataState extends State<ServiceData> {
 
   @override
   Widget build(BuildContext context) {
+    var pitch;
+    var yaw;
+    var roll;
+    if ((widget.characteristics != null &&
+        widget.characteristics.isNotEmpty &&
+        widget.characteristics[0] != null)) {
+      pitch = int.tryParse(
+              "${widget.characteristics[0].lastValue[1].toUnsigned(8).toRadixString(16)}${widget.characteristics[0].lastValue[0].toUnsigned(8).toRadixString(16)}",
+              radix: 16)
+          .toSigned(15);
+      yaw = int.tryParse(
+              "${widget.characteristics[1].lastValue[1].toUnsigned(8).toRadixString(16)}${widget.characteristics[1].lastValue[0].toUnsigned(8).toRadixString(16)}",
+              radix: 16)
+          .toSigned(15);
+      roll = int.tryParse(
+              "${widget.characteristics[2].lastValue[1].toUnsigned(8).toRadixString(16)}${widget.characteristics[2].lastValue[0].toUnsigned(8).toRadixString(16)}",
+              radix: 16)
+          .toSigned(15);
+    }
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: (widget.characteristics != null &&
@@ -58,9 +78,16 @@ class ServiceDataState extends State<ServiceData> {
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                  Text("Pitch: ${widget.characteristics[0].lastValue}"),
-                  Text("Yaw  : ${widget.characteristics[1].lastValue}"),
-                  Text("Roll : ${widget.characteristics[2].lastValue}"),
+                  Text("Pitch: $pitch"),
+                  Text("Yaw  : $yaw"),
+                  Text("Roll : $roll"),
+                  Container(height: 10),
+                  Text("Alpha : ${widget.characteristics[3].lastValue[0]} %"),
+                  Text("Beta  : ${widget.characteristics[4].lastValue[0]} %"),
+                  Text("Theta : ${widget.characteristics[5].lastValue[0]} %"),
+                  Container(height: 10),
+                  Text("Signal quailty: ${widget.characteristics[8].lastValue[0]} %"),
+                  Text("Charge        : ${widget.characteristics[9].lastValue[0]} %"),
                   Container(
                     height: 200,
                     child: (widget.characteristics[4].lastValue.isNotEmpty)
@@ -97,21 +124,7 @@ class StackedBarChart extends StatelessWidget {
       new ChartColumn('Charge', values[4])
     ];
 
-    final maxData = [
-      new ChartColumn('Alpha', 255),
-      new ChartColumn('Beta', 255),
-      new ChartColumn('Theta', 255),
-      new ChartColumn('Signal quality', 255),
-      new ChartColumn('Charge', 100)
-    ];
-
     return [
-      new charts.Series<ChartColumn, String>(
-        id: 'max',
-        domainFn: (ChartColumn col, _) => col.key,
-        measureFn: (ChartColumn col, _) => col.value,
-        data: maxData,
-      ),
       new charts.Series<ChartColumn, String>(
         id: 'data',
         domainFn: (ChartColumn col, _) => col.key,
@@ -127,12 +140,6 @@ class StackedBarChart extends StatelessWidget {
       // Configure the axis spec to show percentage values.
       seriesList,
       animate: animate,
-      barGroupingType: charts.BarGroupingType.stacked,
-      behaviors: [
-        new charts.PercentInjector(
-            totalType: charts.PercentInjectorTotalType.domain)
-      ],
-      primaryMeasureAxis: new charts.PercentAxisSpec(),
     );
   }
 }
