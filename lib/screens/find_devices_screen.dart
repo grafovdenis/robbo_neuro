@@ -39,6 +39,7 @@ class FindDevicesScreen extends StatelessWidget {
                                           "SIZE: ${(await d.discoverServices()).length}");
                                       Navigator.of(context).push(
                                           MaterialPageRoute(builder: (context) {
+                                        FlutterBlue.instance.stopScan();
                                         return DeviceScreen(device: d);
                                       }));
                                     },
