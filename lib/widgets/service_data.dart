@@ -37,11 +37,10 @@ class ServiceDataWidgetState extends State<ServiceDataWidget> {
         setState(() {});
         connection.input.listen((data) {
           ready = true;
-
-          if (String.fromCharCodes(data).contains('!')) {
-            connection.finish(); // Closing connection
-            print('Disconnecting by local host');
-          }
+          // if (String.fromCharCodes(data).contains('!')) {
+          //   connection.finish(); // Closing connection
+          //   print('Disconnecting by local host');
+          // }
         }).onDone(() {
           print('Disconnected by remote request');
         });
@@ -62,28 +61,34 @@ class ServiceDataWidgetState extends State<ServiceDataWidget> {
 
   Future<void> write() async {
     try {
-      if (pitch >= 0) {
-        if (roll >= 0) {
-          num _turn = 1 - roll / 90;
-          left = (pitch / 90 * 63 * _turn).toInt();
-          right = (pitch / 90 * 63).toInt();
+      if ((pitch >= 10 || pitch <= -10) &&
+          pitch <= 90 &&
+          pitch >= -90 &&
+          left >= 0 &&
+          right >= 0) {
+        if (pitch >= 0) {
+          if (roll >= 0) {
+            num _turn = 1 - roll / 90;
+            left = (pitch / 90 * 63 * _turn).toInt();
+            right = (pitch / 90 * 63).toInt();
+          } else {
+            num _turn = 1 + roll / 90;
+            left = (pitch / 90 * 63).toInt();
+            right = (pitch / 90 * 63 * _turn).toInt();
+          }
         } else {
-          num _turn = 1 + roll / 90;
-          left = (pitch / 90 * 63).toInt();
-          right = (pitch / 90 * 63 * _turn).toInt();
+          // left = (-pitch / 90 * 63 + 63).toInt();
+          // right = (-pitch / 90 * 63 + 63).toInt();
+          if (roll >= 0) {
+            num _turn = 1 - roll / 90;
+            left = ((-pitch / 90 * 63) * _turn + 63).toInt();
+            right = (-pitch / 90 * 63 + 63).toInt();
+          } else {
+            num _turn = 1 + roll / 90;
+            left = (-pitch / 90 * 63 + 63).toInt();
+            right = ((-pitch / 90 * 63) * _turn + 63).toInt();
+          }
         }
-      } else {
-        left = (-pitch / 90 * 63 + 63).toInt();
-        right = (-pitch / 90 * 63 + 63).toInt();
-      }
-      if (pitch <= 90 && pitch >= -90 && left >= 0 && right >= 0) {
-        // connection.output.add(Uint8List.fromList([
-        //   99,
-        //   right,
-        //   left,
-        //   36,
-        // ]));
-
         connection.output.add(Uint8List.fromList([
           103,
           right,
