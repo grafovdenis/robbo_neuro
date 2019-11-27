@@ -19,6 +19,7 @@ class ServiceDataWidgetState extends State<ServiceDataWidget> {
   int roll = 0;
   int left = 0;
   int right = 0;
+  int claw = 0;
   spp.BluetoothConnection connection;
   List<BluetoothService> services;
   List<BluetoothCharacteristic> characteristics;
@@ -30,10 +31,13 @@ class ServiceDataWidgetState extends State<ServiceDataWidget> {
   void prepare() async {
     try {
       if (connection == null || !connection.isConnected) {
+        print('Trying to connect to car');
         connection =
             await spp.BluetoothConnection.toAddress('00:06:66:7D:AB:31');
         print("CAR CONNECTED");
         ready = true;
+        services = await widget.device?.discoverServices();
+        characteristics = services[2].characteristics;
         setState(() {});
         connection.input.listen((data) {
           ready = true;
@@ -45,9 +49,9 @@ class ServiceDataWidgetState extends State<ServiceDataWidget> {
           print('Disconnected by remote request');
         });
       }
-    } catch (e) {}
-    services = await widget.device?.discoverServices();
-    characteristics = services[2].characteristics;
+    } catch (e) {
+      prepare();
+    }
   }
 
   void read() async {
@@ -77,8 +81,6 @@ class ServiceDataWidgetState extends State<ServiceDataWidget> {
             right = (pitch / 90 * 63 * _turn).toInt();
           }
         } else {
-          // left = (-pitch / 90 * 63 + 63).toInt();
-          // right = (-pitch / 90 * 63 + 63).toInt();
           if (roll >= 0) {
             num _turn = 1 - roll / 90;
             left = ((-pitch / 90 * 63) * _turn + 63).toInt();
@@ -97,9 +99,16 @@ class ServiceDataWidgetState extends State<ServiceDataWidget> {
           24,
           36,
         ]));
-        await connection.output.allSent;
-        ready = false;
       }
+      final char = characteristics[3].lastValue[0];
+      claw = (char + 100).toInt();
+      connection.output.add(Uint8List.fromList([
+        106,
+        claw,
+        36,
+      ]));
+      await connection.output.allSent;
+      ready = false;
     } catch (e) {
       print(e);
     }
@@ -169,15 +178,16 @@ class ServiceDataWidgetState extends State<ServiceDataWidget> {
                         child: (characteristics[3].lastValue.isNotEmpty)
                             ? StackedBarChart([
                                 characteristics[3].lastValue[0],
-                                127,
-                                127,
-                                127,
-                                127,
+                                50,
+                                50,
+                                50,
+                                100,
                               ], true)
                             : Container(),
                       ),
                       Text("Left : $left"),
-                      Text("Right: $right")
+                      Text("Right: $right"),
+                      Text("Claw : $claw")
                     ])
               : Container(
                   height: 200,
