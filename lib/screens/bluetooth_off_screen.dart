@@ -9,7 +9,7 @@ class BluetoothOffScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlue,
+      backgroundColor: Color.fromRGBO(0, 175, 65, 1),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,

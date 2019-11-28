@@ -30,14 +30,12 @@ class ServiceDataWidgetState extends State<ServiceDataWidget> {
 
   void prepare() async {
     try {
-      if (connection == null || !connection.isConnected) {
+      while (connection == null || !connection.isConnected) {
         print('Trying to connect to car');
         connection =
             await spp.BluetoothConnection.toAddress('00:06:66:7D:AB:31');
         print("CAR CONNECTED");
         ready = true;
-        services = await widget.device?.discoverServices();
-        characteristics = services[2].characteristics;
         setState(() {});
         connection.input.listen((data) {
           ready = true;
@@ -49,8 +47,10 @@ class ServiceDataWidgetState extends State<ServiceDataWidget> {
           print('Disconnected by remote request');
         });
       }
+      services = await widget.device?.discoverServices();
+      characteristics = services[2].characteristics;
     } catch (e) {
-      prepare();
+      print('Connection failed');
     }
   }
 
@@ -101,7 +101,7 @@ class ServiceDataWidgetState extends State<ServiceDataWidget> {
         ]));
       }
       final char = characteristics[3].lastValue[0];
-      claw = (char + 100).toInt();
+      claw = (char / 100 * 120).toInt();
       connection.output.add(Uint8List.fromList([
         106,
         claw,
@@ -199,7 +199,7 @@ class ServiceDataWidgetState extends State<ServiceDataWidget> {
         ),
         (connected)
             ? FlatButton(
-                color: Colors.blue,
+                color: Color.fromRGBO(0, 175, 65, 1),
                 child: Text((!_start) ? "Start!" : "Stop!"),
                 onPressed: () {
                   setState(() {

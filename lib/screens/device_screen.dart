@@ -11,6 +11,7 @@ class DeviceScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromRGBO(0, 175, 65, 1),
         title: Text(device.name),
         actions: <Widget>[
           StreamBuilder<BluetoothDeviceState>(
