@@ -39,10 +39,6 @@ class ServiceDataWidgetState extends State<ServiceDataWidget> {
         setState(() {});
         connection.input.listen((data) {
           ready = true;
-          // if (String.fromCharCodes(data).contains('!')) {
-          //   connection.finish(); // Closing connection
-          //   print('Disconnecting by local host');
-          // }
         }).onDone(() {
           print('Disconnected by remote request');
         });
@@ -119,9 +115,6 @@ class ServiceDataWidgetState extends State<ServiceDataWidget> {
   }
 
   void start() async {
-    // _sppTimer = Timer.periodic(Duration(microseconds: 100), (Timer t) {
-    //   write();
-    // });
     const refresh_rate = const Duration(milliseconds: 100);
     _timer = Timer.periodic(refresh_rate, (Timer t) {
       read();
