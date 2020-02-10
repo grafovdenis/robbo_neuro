@@ -1,16 +1,9 @@
 # robbo_neuro
 
-A new Flutter application.
+Flutter application, created to control external device and visualize some data.
 
-## Getting Started
+![app](https://spbpu.com/wp-content/uploads/2019/10/platforma_photo.jpg).
 
-This project is a starting point for a Flutter application.
+App gets characteristics from BLE device every 100ms, shows it, and sends modified data to external device using Bluetooth SPP to control it.  
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+All data manipulation is located in `lib/widgets/service_data.dart`.
