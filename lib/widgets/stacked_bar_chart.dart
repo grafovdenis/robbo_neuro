@@ -25,6 +25,7 @@ class StackedBarChart extends StatelessWidget {
         id: 'data',
         domainFn: (ChartColumn col, _) => col.key,
         measureFn: (ChartColumn col, _) => col.value,
+        colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
         data: actualData,
       ),
     ];

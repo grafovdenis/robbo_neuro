@@ -9,6 +9,7 @@ class FindDevicesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color.fromRGBO(0, 175, 65, 1),
         title: Text('Find Devices'),
       ),
       body: RefreshIndicator(
@@ -39,6 +40,7 @@ class FindDevicesScreen extends StatelessWidget {
                                           "SIZE: ${(await d.discoverServices()).length}");
                                       Navigator.of(context).push(
                                           MaterialPageRoute(builder: (context) {
+                                        FlutterBlue.instance.stopScan();
                                         return DeviceScreen(device: d);
                                       }));
                                     },
@@ -85,6 +87,7 @@ class FindDevicesScreen extends StatelessWidget {
             );
           } else {
             return FloatingActionButton(
+                backgroundColor: Color.fromRGBO(0, 175, 65, 1),
                 child: Icon(Icons.search),
                 onPressed: () => FlutterBlue.instance
                     .startScan(timeout: Duration(seconds: 4)));
